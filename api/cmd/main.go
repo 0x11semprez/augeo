@@ -1,7 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"net/http"
+
+	"api/internal/config"
+	"api/internal/server"
+)
 
 func main() {
-	fmt.Print("Hello\n")
+	cfg := config.Config{}
+	srv := server.Server{}
+	mux := http.NewServeMux()
+	cfg.NewConfig()
+
+	srv.CreateServer(&cfg, mux)
+	err := srv.Server.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
