@@ -1,0 +1,63 @@
+name: Sync subrepos
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-subrepos-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-24.04
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'devis-api/**'
+            frontend:
+              - 'frontend/**'
+
+  sync-backend:
+    needs: detect
+    if: needs.detect.outputs.backend == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: split devis-api/ history
+        run: git subtree split --prefix=devis-api -b sync-backend
+      - name: push to augeo-backend
+        run: |
+          git push "https://x-access-token:${SYNC_REPOS_TOKEN}@github.com/0x11semprez/augeo-backend.git" sync-backend:main --force
+        env:
+          SYNC_REPOS_TOKEN: ${{ secrets.SYNC_REPOS_TOKEN }}
+
+  sync-frontend:
+    needs: detect
+    if: needs.detect.outputs.frontend == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: split frontend/ history
+        run: git subtree split --prefix=frontend -b sync-frontend
+      - name: push to augeo-frontend
+        run: |
+          git push "https://x-access-token:${SYNC_REPOS_TOKEN}@github.com/0x11semprez/augeo-frontend.git" sync-frontend:main --force
+        env:
+          SYNC_REPOS_TOKEN: ${{ secrets.SYNC_REPOS_TOKEN }}

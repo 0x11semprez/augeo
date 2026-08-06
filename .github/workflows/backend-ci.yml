@@ -1,10 +1,15 @@
-name: Golang Ci
+name: Backend CI
+
 on:
   push:
     branches: [main]
     tags: ["v*"]
+    paths: ["devis-api/**", ".github/workflows/backend-ci.yml"]
   pull_request:
-  merge_group:permissions:
+    paths: ["devis-api/**", ".github/workflows/backend-ci.yml"]
+  merge_group:
+
+permissions:
   contents: read
 
 concurrency:
@@ -12,8 +17,12 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
-  GO_VERSION: "1.26"
+  GO_VERSION: "1.25"
   GOLANGCI_VERSION: "v2.12"
+
+defaults:
+  run:
+    working-directory: devis-api
 
 jobs:
   lint:
@@ -24,13 +33,14 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: "**/go.sum"
+          cache-dependency-path: devis-api/go.sum
       - run: |
-          go mod tidy -diff   
-          go mod verify       
-          - uses: golangci/golangci-lint-action@v9
+          go mod tidy -diff
+          go mod verify
+      - uses: golangci/golangci-lint-action@v9
         with:
           version: ${{ env.GOLANGCI_VERSION }}
+          working-directory: devis-api
 
   test:
     runs-on: ${{ matrix.os }}
@@ -39,13 +49,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04]
-        go: ["1.26", "1.25"]
+        go: ["1.25"]
         include:
-          - { os: macos-latest, go: "1.26" }
+          - { os: macos-latest, go: "1.25" }
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v7
-        with: { go-version: "${{ matrix.go }}" }
+        with:
+          go-version: ${{ matrix.go }}
+          cache-dependency-path: devis-api/go.sum
       - run: go build ./...
       - name: test
         env: { CGO_ENABLED: "1" }
