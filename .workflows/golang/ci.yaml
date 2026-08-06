@@ -1,4 +1,4 @@
-name: ci
+name: Golang Ci
 on:
   push:
     branches: [main]
