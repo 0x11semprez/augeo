@@ -1,0 +1,68 @@
+name: ci
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  merge_group:permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  GO_VERSION: "1.26"
+  GOLANGCI_VERSION: "v2.12"
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache-dependency-path: "**/go.sum"
+      - run: |
+          go mod tidy -diff   
+          go mod verify       
+          - uses: golangci/golangci-lint-action@v9
+        with:
+          version: ${{ env.GOLANGCI_VERSION }}
+
+  test:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04]
+        go: ["1.26", "1.25"]
+        include:
+          - { os: macos-latest, go: "1.26" }
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v7
+        with: { go-version: "${{ matrix.go }}" }
+      - run: go build ./...
+      - name: test
+        env: { CGO_ENABLED: "1" }
+        run: |
+          go test -race -shuffle=on -count=1 -timeout=5m \
+                  -covermode=atomic -coverprofile=cover.out -coverpkg=./... ./...
+      - name: coverage floor
+        run: |
+          pct=$(go tool cover -func=cover.out | awk '/^total:/{print substr($3,1,length($3)-1)}')
+          echo "total: $pct%"
+          awk -v p="$pct" 'BEGIN{exit (p+0 >= 60) ? 0 : 1}'
+
+  ci-ok:
+    if: always()
+    needs: [lint, test]
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          echo '${{ toJSON(needs.*.result) }}' | grep -qE 'failure|cancelled' && exit 1
+          exit 0
