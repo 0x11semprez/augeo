@@ -37,6 +37,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: split devis-api/ history
         run: git subtree split --prefix=devis-api -b sync-backend
       - name: push to augeo-backend
@@ -54,6 +55,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: split frontend/ history
         run: git subtree split --prefix=frontend -b sync-frontend
       - name: push to augeo-frontend
