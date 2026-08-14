@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+why augeo ? </br>
+OGF's Maison Funéraire du Mont Valérien (Nanterre) receives about 2,000 deceased a year. Every one of them needs a quote (devis): family info, stay dates, services rendered, total price. </br>
+Before augeo, that quote was typed by hand into a document, priced by hand, printed, scanned, printed again for billing, filed, and finally attached to a hand-written email to the funeral operator. Seven steps, all manual, all repeated ~2,000 times a year — see [business-impact.md](docs/business-impact.md) for what that actually cost. </br>
+</br>
+augeo is not a CRM. </br>
+augeo is an internal quote generator for OGF, exposed through a web form: fill in the deceased's info, tick the services rendered, and a priced, correctly named PDF comes out — attached, ready to send, with the email already addressed and worded. </br>
+augeo is augeo. </br>
+</br>
+architecture: </br>
 
-## Getting Started
+- frontend: Next.js form, hosted on Vercel </br>
+- backend: Go API on a VPS, fills an Excel template and shells out to headless LibreOffice to produce the PDF </br>
+- one env var on Vercel points the frontend at the backend, so environments swap without touching code </br>
 
-First, run the development server:
+See [architecture.md](docs/architecture.md) for the full picture and why it's split this way.
+
+## Quickstart
+
+Prerequisites: Go 1.22+, Node 20+ with pnpm, LibreOffice (`libreoffice-calc`) installed locally for PDF conversion.
+
+**1. Backend.**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd devis-api
+go run . -addr :8080 -template ./template/devis_template.xlsx -operateurs ./data/operateurs.xlsx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**2. Frontend.**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd frontend
+pnpm install
+echo "NEXT_PUBLIC_DEVIS_API_URL=http://localhost:8080" > .env.local
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000), fill in a deceased's info, tick a few services, generate a devis.
 
-## Learn More
+## Docs
 
-To learn more about Next.js, take a look at the following resources:
+- [architecture.md](docs/architecture.md) multi-repo setup, why Vercel + a VPS, how the two halves talk to each other
+- [business-impact.md](docs/business-impact.md) the manual process it replaces, and what the friction was actually costing
+- [ci.md](docs/ci.md) what runs on every push, and how changes reach the two deploy-facing repos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+we love create
