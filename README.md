@@ -1,6 +1,6 @@
 why augeo ? </br>
 OGF's Maison Funéraire du Mont Valérien (Nanterre) receives about 2,000 deceased a year. Every one of them needs a quote (devis): family info, stay dates, services rendered, total price. </br>
-Before augeo, that quote was typed by hand into a document, priced by hand, printed, scanned, printed again for billing, filed, and finally attached to a hand-written email to the funeral operator. Seven steps, all manual, all repeated ~2,000 times a year — see [business-impact.md](docs/business-impact.md) for what that actually cost. </br>
+Before augeo, that quote was typed by hand into a document, priced by hand, printed, scanned, printed again for billing, filed, and finally attached to a hand-written email to the funeral operator. Seven steps, all manual, all repeated ~2,000 times a year see [business-impact.md](docs/business-impact.md) for what that actually cost. </br>
 </br>
 augeo is not a CRM. </br>
 augeo is an internal quote generator for OGF, exposed through a web form: fill in the deceased's info, tick the services rendered, and a priced, correctly named PDF comes out — attached, ready to send, with the email already addressed and worded. </br>
