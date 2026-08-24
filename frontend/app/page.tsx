@@ -660,7 +660,7 @@ export default function Home() {
                                 }))
                               }
                             />
-                            Arrivée de nuit
+                            Arrivée de nuit/Dimanche/Jours fériés
                           </label>
                         </div>
                       </Field>
