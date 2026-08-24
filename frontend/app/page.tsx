@@ -494,7 +494,7 @@ export default function Home() {
                           }
                         />
                       </Field>
-                      <Field label="Ville du décès">
+                      <Field label="Ville du décès" className="span-2">
                         <input
                           list="villes-options"
                           value={data.villeDeces}
