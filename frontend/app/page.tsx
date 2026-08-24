@@ -6,6 +6,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 type Prestation = { Code: string; Libelle: string; PrixTTC: number };
 type Operateur = { nom: string; email: string; telephone: string };
 type FormData = {
+  initiales: string;
   civilite: string;
   nom: string;
   nomNaissance: string;
@@ -30,6 +31,7 @@ type FormData = {
 };
 
 const initialData: FormData = {
+  initiales: "",
   civilite: "M",
   nom: "",
   nomNaissance: "",
@@ -387,6 +389,24 @@ export default function Home() {
             </button>
           </div>
           <form onSubmit={handleSubmit} key={formKey}>
+            <section className="form-card">
+              <Heading
+                title="Initiales"
+                subtitle="Personne qui remplit le devis"
+              />
+              <div className="form-grid">
+                <Field label="Initiales">
+                  <input
+                    value={data.initiales}
+                    onChange={(e) =>
+                      updateField("initiales", e.target.value.toUpperCase())
+                    }
+                    placeholder="JD"
+                    maxLength={5}
+                  />
+                </Field>
+              </div>
+            </section>
             <div className="rubrique-tabs" role="tablist">
               {rubriqueLabels.map((label, index) => (
                 <button
@@ -660,7 +680,7 @@ export default function Home() {
                                 }))
                               }
                             />
-                            Arrivée de nuit/Dimanche/Jours fériés
+                            Arrivée de nuit/ Dimanche/ Jours fériés
                           </label>
                         </div>
                       </Field>
