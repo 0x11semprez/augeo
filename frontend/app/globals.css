@@ -44,124 +44,9 @@ select {
   width: auto;
   display: block;
 }
-.sidebar {
-  width: 258px;
-  min-height: 100vh;
-  flex: 0 0 258px;
-  padding: 31px 17px 25px;
-  background: var(--navy);
-  color: #eef3fa;
-  display: flex;
-  flex-direction: column;
-}
-.brand {
-  display: flex;
-  gap: 11px;
-  align-items: center;
-  font-size: 18px;
-  font-weight: 700;
-  padding: 0 10px;
-}
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 31px;
-  height: 31px;
-  background: var(--accent);
-  border-radius: 9px;
-  color: #fff;
-  font-family: Georgia, serif;
-  font-size: 19px;
-}
-.sidebar-context {
-  color: #8494aa;
-  font-size: 10px;
-  letter-spacing: 1.25px;
-  margin: 57px 10px 13px;
-  font-weight: 700;
-}
-.nav-list {
-  display: grid;
-  gap: 5px;
-}
-.nav-item {
-  color: #b5c0cf;
-  border-radius: 9px;
-  display: flex;
-  gap: 13px;
-  align-items: center;
-  padding: 12px 13px;
-  font-size: 14px;
-  text-decoration: none;
-}
-.nav-item span {
-  font-size: 17px;
-  width: 17px;
-  text-align: center;
-}
-.nav-item.active {
-  color: #fff;
-  background: #30435e;
-  font-weight: 600;
-}
-.sidebar-footer {
-  margin-top: auto;
-  border-top: 1px solid #34465e;
-  padding: 20px 9px 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-}
-.sidebar-footer strong {
-  display: block;
-  font-size: 12px;
-}
-.sidebar-footer small {
-  color: #8e9caf;
-  display: block;
-  margin-top: 3px;
-}
-.avatar {
-  border-radius: 50%;
-  background: #d8e0eb;
-  color: var(--navy);
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  width: 33px;
-  height: 33px;
-  font-size: 10px;
-}
 .workspace {
   flex: 1;
   min-width: 0;
-}
-.topbar {
-  height: 76px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--line);
-  padding: 0 clamp(25px, 5vw, 70px);
-}
-.breadcrumb {
-  font-size: 13px;
-  color: var(--muted);
-}
-.breadcrumb span {
-  margin: 0 9px;
-  color: #bec5d0;
-}
-.help-button {
-  border: 1px solid #d7dce5;
-  background: #fff;
-  color: #68758a;
-  border-radius: 50%;
-  width: 29px;
-  height: 29px;
-  font-weight: 700;
 }
 .content {
   max-width: 1180px;
@@ -184,22 +69,6 @@ select {
   font-size: 16px;
   color: var(--muted);
 }
-.draft-badge {
-  background: #fff6ed;
-  color: #b16c36;
-  padding: 8px 11px;
-  border-radius: 7px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.draft-badge span {
-  width: 7px;
-  height: 7px;
-  background: #f1a55c;
-  display: inline-block;
-  border-radius: 50%;
-  margin-right: 7px;
-}
 .form-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -215,17 +84,6 @@ select {
   border-bottom: 1px solid var(--line);
   padding-bottom: 24px;
   margin-bottom: 25px;
-}
-.step {
-  color: var(--accent);
-  background: var(--accent-tint);
-  height: 38px;
-  width: 38px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 800;
 }
 .card-heading h2 {
   margin: 0;
@@ -342,22 +200,6 @@ select {
   color: #98a1b0;
   font-size: 11px;
   font-weight: 500;
-}
-.quantity {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #858fa0;
-  font-size: 13px;
-}
-.quantity input {
-  border: 1px solid #dce1e9;
-  width: 58px;
-  height: 38px;
-  border-radius: 6px;
-  text-align: center;
-  outline: none;
-  color: var(--ink);
 }
 .prestation-checkbox {
   appearance: none;
@@ -477,29 +319,6 @@ select {
   cursor: wait;
 }
 @media (max-width: 900px) {
-  .sidebar {
-    width: 72px;
-    flex-basis: 72px;
-    padding: 25px 10px;
-  }
-  .brand {
-    padding: 0;
-    justify-content: center;
-  }
-  .brand > span:last-child,
-  .sidebar-context,
-  .nav-item:not(.active),
-  .sidebar-footer div {
-    display: none;
-  }
-  .nav-item {
-    padding: 12px;
-    justify-content: center;
-  }
-  .sidebar-footer {
-    padding: 18px 9px 0;
-    justify-content: center;
-  }
   .form-grid,
   .measurement-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -523,12 +342,6 @@ select {
   .app-shell {
     display: block;
   }
-  .sidebar {
-    display: none;
-  }
-  .topbar {
-    height: 62px;
-  }
   .content {
     padding: 32px 16px 55px;
   }
@@ -537,10 +350,6 @@ select {
   }
   .page-intro h1 {
     font-size: 26px;
-  }
-  .draft-badge {
-    display: inline-block;
-    margin-top: 17px;
   }
   .form-card {
     padding: 22px 17px;
