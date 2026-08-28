@@ -41,5 +41,6 @@ Open [http://localhost:3000](http://localhost:3000), fill in a deceased's info, 
 - [architecture.md](docs/architecture.md) multi-repo setup, why Vercel + a VPS, how the two halves talk to each other
 - [business-impact.md](docs/business-impact.md) the manual process it replaces, and what the friction was actually costing
 - [ci.md](docs/ci.md) what runs on every push, and how changes reach the two deploy-facing repos
+- [skills/devis-document](docs/skills/devis-document/SKILL.md) how the devis PDF is actually built: cell map, the row-offset trap, and the loop to verify a change
 
 we love create

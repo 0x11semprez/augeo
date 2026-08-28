@@ -231,7 +231,7 @@ export default function Home() {
     });
   };
 
-  // Generates the devis PDF and opens it in a new window.
+  // Generates the devis PDF and downloads it.
   async function generateDevis(): Promise<boolean> {
     const selected = Object.fromEntries(
       Object.entries(selectedPrestations)
@@ -279,8 +279,6 @@ export default function Home() {
     }
     setIsSubmitting(true);
     setStatus(null);
-    // Open before the `await` so it isn't blocked as a pop-up.
-    const pdfWindow = window.open("", "_blank");
     try {
       const response = await fetch(`${apiUrl}/api/devis`, {
         method: "POST",
@@ -304,11 +302,11 @@ export default function Home() {
       }
       const blob = await response.blob();
       const fileName = `devis_${sanitizeFileNamePart(data.nom)}_${sanitizeFileNamePart(data.prenom)}.pdf`;
-      // Two separate object URLs: sharing a single blob: URL between the
-      // preview tab and the <a download> anchor makes browsers hijack the
-      // download and just reopen the PDF viewer instead (e.g. Firefox
-      // bug 1766420), which is also why the "Save As" name then falls back
-      // to a random blob id instead of the intended file name.
+      // Download only: the devis used to be previewed in a tab opened before
+      // the fetch *and* downloaded, so generating one popped up two windows
+      // at once. The browser's own download UI is the single entry point now.
+      // Wrapping the blob in a File keeps the intended name in "Save As"
+      // dialogs, where the `download` attribute alone is ignored.
       const downloadUrl = URL.createObjectURL(
         new File([blob], fileName, { type: "application/pdf" }),
       );
@@ -318,21 +316,14 @@ export default function Home() {
       document.body.appendChild(downloadLink);
       downloadLink.click();
       downloadLink.remove();
-      const previewUrl = URL.createObjectURL(blob);
-      if (pdfWindow) pdfWindow.location.href = previewUrl;
-      // Revoke once the new tab has had time to load the PDF, to avoid leaking the blobs.
-      setTimeout(() => {
-        URL.revokeObjectURL(downloadUrl);
-        URL.revokeObjectURL(previewUrl);
-      }, 60_000);
+      // Revoke once the download has had time to start, to avoid leaking the blob.
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 60_000);
       setStatus({
         type: "success",
-        message:
-          "Le devis a été généré, téléchargé et ouvert dans une nouvelle fenêtre.",
+        message: "Le devis a été généré et téléchargé.",
       });
       return true;
     } catch (error) {
-      pdfWindow?.close();
       setStatus({
         type: "error",
         message:
